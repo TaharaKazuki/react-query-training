@@ -1,0 +1,15 @@
+li {
+  margin-top: 8px;
+  &.post-title {
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}
+
+.pages {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
