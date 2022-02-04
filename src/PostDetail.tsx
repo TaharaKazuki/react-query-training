@@ -41,6 +41,7 @@ const PostDetail: FC<IPostDetail> = ({ post }) => {
     <>
       <h3 style={{ color: 'blue' }}>{post.title}</h3>
       <button>Delete</button> <button>Updata title</button>
+      <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map((comment) => (
         <li key={comment.id}>

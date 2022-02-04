@@ -24,6 +24,7 @@ const Posts = () => {
   const [selectedPost, setSelectedPost] = useState<IData | null>(null)
 
   const { data } = useQuery<Array<IData>, Error>('post', fetchPosts)
+  if (!data) return <div />
 
   return (
     <>
