@@ -23,12 +23,19 @@ const Posts = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [selectedPost, setSelectedPost] = useState<IData | null>(null)
 
-  const { data, isError, isLoading } = useQuery<Array<IData>, Error>(
+  const { data, isError, error, isLoading } = useQuery<Array<IData>, Error>(
     'post',
     fetchPosts
   )
   if (isLoading) return <h3>Loading...</h3>
-  if (isError) return <h3>Opps, something went wrong</h3>
+  if (isError)
+    return (
+      <>
+        <h3>Opps, something went wrong</h3>
+        {error && <p>{error.toString()}</p>}
+      </>
+    )
+
   return (
     <>
       <ul>
