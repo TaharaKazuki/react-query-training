@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { IData } from './Posts'
 
 const fetchComments = async (postId: string) => {
   const response = await fetch(
@@ -24,20 +25,17 @@ const updatePost = async (postId: string) => {
 }
 
 interface IPostDetail {
-  post: {
-    id: string
-    title: string
-  }
+  post: IData
 }
 
-interface IData {
+interface IDetailData {
   id: string
   email: string
   body: string
 }
 
 const PostDetail: FC<IPostDetail> = ({ post }) => {
-  const data: Array<IData> = []
+  const data: Array<IDetailData> = []
 
   return (
     <>

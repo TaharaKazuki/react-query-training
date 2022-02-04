@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import PostDetail from './PostDetail'
+import { useQuery } from 'react-query'
+
+const maxPostPage = 10
 
 const fetchPosts = async () => {
   const response = await fetch(
@@ -9,21 +12,23 @@ const fetchPosts = async () => {
   return response
 }
 
-interface IData {
-  id: string
+export interface IData {
+  userId: number
+  id: number
   title: string
+  body: string
 }
 
 const Posts = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [selectedPost, setSelectedPost] = useState<IData | null>(null)
 
-  const data: Array<IData> = []
+  const { data } = useQuery<Array<IData>, Error>('post', fetchPosts)
 
   return (
     <>
       <ul>
-        {data.map((post) => (
+        {data!.map((post) => (
           <li
             key={post.id}
             className="post-title"
@@ -37,7 +42,7 @@ const Posts = () => {
         <button disabled onClick={() => {}}>
           Previous Page
         </button>
-        <span></span>
+        <span>Page {currentPage + 1}</span>
         <button disabled onClick={() => {}}>
           Next Page
         </button>
