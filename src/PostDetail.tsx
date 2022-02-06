@@ -36,10 +36,23 @@ interface IDetailData {
 }
 
 const PostDetail: FC<IPostDetail> = ({ post }) => {
-  const { data, isLoading } = useQuery<Array<IDetailData>, Error>(
-    'comments',
-    () => fetchComments(post.id)
-  )
+  const { data, isLoading, isError, error } = useQuery<
+    Array<IDetailData>,
+    Error
+  >(['comments', post.id], () => fetchComments(post.id))
+
+  if (isLoading) {
+    return <h3>Loading...</h3>
+  }
+
+  if (isError) {
+    return (
+      <>
+        <h3>Error</h3>
+        <p>{error!.toString()}</p>
+      </>
+    )
+  }
 
   return (
     <>
