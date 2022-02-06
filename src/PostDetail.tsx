@@ -1,14 +1,15 @@
 import React, { FC } from 'react'
 import { IData } from './Posts'
+import { useQuery } from 'react-query'
 
-const fetchComments = async (postId: string) => {
+const fetchComments = async (postId: number) => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
   ).then((data) => data.json())
   return response
 }
 
-const deletePost = async (postId: string) => {
+const deletePost = async (postId: number) => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/postId/${postId}`,
     { method: 'DELETE' }
@@ -16,7 +17,7 @@ const deletePost = async (postId: string) => {
   return response
 }
 
-const updatePost = async (postId: string) => {
+const updatePost = async (postId: number) => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/postId/${postId}`,
     { method: 'PATCH' }
@@ -35,7 +36,10 @@ interface IDetailData {
 }
 
 const PostDetail: FC<IPostDetail> = ({ post }) => {
-  const data: Array<IDetailData> = []
+  const { data, isLoading } = useQuery<Array<IDetailData>, Error>(
+    'comments',
+    () => fetchComments(post.id)
+  )
 
   return (
     <>
@@ -43,7 +47,7 @@ const PostDetail: FC<IPostDetail> = ({ post }) => {
       <button>Delete</button> <button>Updata title</button>
       <p>{post.body}</p>
       <h4>Comments</h4>
-      {data.map((comment) => (
+      {data!.map((comment) => (
         <li key={comment.id}>
           {comment.email} {comment.body}
         </li>
