@@ -32,15 +32,14 @@ const Posts = () => {
     }
   }, [currentPage, queryClient])
 
-  const { data, isError, error, isLoading } = useQuery<Array<IData>, Error>(
-    ['post', currentPage],
-    () => fetchPosts(currentPage),
-    {
-      staleTime: 2000,
-      keepPreviousData: true,
-    }
-  )
-  if (isLoading) return <h3>Loading...</h3>
+  const { data, isError, error, isLoading, isFetching } = useQuery<
+    Array<IData>,
+    Error
+  >(['post', currentPage], () => fetchPosts(currentPage), {
+    staleTime: 2000,
+    keepPreviousData: true,
+  })
+  if (isFetching) return <h3>Loading...</h3>
   if (isError)
     return (
       <>
