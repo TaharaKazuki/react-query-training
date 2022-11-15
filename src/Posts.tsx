@@ -1,5 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
+import { useQuery } from 'react-query'
+import { PostDetail } from './PostDetail'
 
 const MAX_POST_PAGE = 10
 
@@ -21,12 +23,13 @@ export const Posts = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
-  const data: Post[] = []
+  const { data } = useQuery<Post[]>('post', fetchPosts)
+  if (!data) return <div />
 
   return (
     <>
       <ul>
-        {data.map((post) => (
+        {data?.map((post) => (
           <li key={post.id} className="post-title" onClick={() => setSelectedPost(post)}>
             {post.title}
           </li>
@@ -42,7 +45,7 @@ export const Posts = () => {
         </button>
       </div>
       <hr />
-      {selectedPost}
+      {selectedPost && <PostDetail post={selectedPost} />}
     </>
   )
 }
