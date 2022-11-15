@@ -23,8 +23,14 @@ export const Posts = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
-  const { data } = useQuery<Post[]>('post', fetchPosts)
-  if (!data) return <div />
+  const { data, isError, error, isLoading } = useQuery<Post[], Error>('post', fetchPosts)
+  if (isLoading) return <h3>Loading...</h3>
+  if (isError)
+    return (
+      <h3>
+        Error <p>{error.toString()}</p>{' '}
+      </h3>
+    )
 
   return (
     <>
