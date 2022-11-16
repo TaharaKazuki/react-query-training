@@ -1,9 +1,9 @@
-import type { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { PostDetail } from './PostDetail'
 
-const MAX_POST_PAGE = 10
+const MAX_POST_PAGE = 9
 
 const fetchPosts = async (currentPage: number) => {
   const response = await fetch(
@@ -23,11 +23,21 @@ export const Posts = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    if (currentPage < MAX_POST_PAGE) {
+      const nextPage = currentPage + 1
+      queryClient.prefetchQuery(['post', nextPage], () => fetchPosts(nextPage))
+    }
+  }, [currentPage, queryClient])
+
   const { data, isError, error, isLoading } = useQuery<Post[], Error>(
     ['post', currentPage],
     () => fetchPosts(currentPage),
     {
       staleTime: 2000,
+      keepPreviousData: true,
     }
   )
   if (isLoading) return <h3>Loading...</h3>
@@ -49,7 +59,7 @@ export const Posts = () => {
       </ul>
       <div className="pages">
         <button
-          disabled={currentPage <= 1}
+          disabled={currentPage <= 0}
           onClick={() => {
             setCurrentPage((prevPage) => prevPage - 1)
           }}
