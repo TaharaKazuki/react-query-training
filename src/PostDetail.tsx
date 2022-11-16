@@ -1,5 +1,6 @@
 import type { Post } from './Posts'
 import type { FC } from 'react'
+import { useQuery } from 'react-query'
 
 type Comment = Post & {
   email: string
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const fetchComments = async (postId: number) => {
+  console.info('postId', postId)
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
   ).then((res) => res.json())
@@ -31,7 +33,22 @@ const updatePost = async (postId: number) => {
 }
 
 export const PostDetail: FC<Props> = ({ post }) => {
-  const data: Comment[] = []
+  const { data, isLoading, isError, error } = useQuery<Comment[], Error>('comments', () =>
+    fetchComments(post.id)
+  )
+
+  if (isLoading) {
+    return <h3>Loading</h3>
+  }
+
+  if (isError) {
+    return (
+      <>
+        <h3>Error</h3>
+        <p>{error.toString()}</p>
+      </>
+    )
+  }
 
   return (
     <>
@@ -39,7 +56,7 @@ export const PostDetail: FC<Props> = ({ post }) => {
       <button>Delete</button> <button>Update title</button>
       <p>{post.body}</p>
       <h4>Comments</h4>
-      {data.map((comment) => (
+      {data?.map((comment) => (
         <li key={comment.id}>
           {comment.email}:{comment.body}
         </li>

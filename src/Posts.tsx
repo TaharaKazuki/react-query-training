@@ -23,7 +23,9 @@ export const Posts = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
-  const { data, isError, error, isLoading } = useQuery<Post[], Error>('post', fetchPosts)
+  const { data, isError, error, isLoading } = useQuery<Post[], Error>('post', fetchPosts, {
+    staleTime: 2000,
+  })
   if (isLoading) return <h3>Loading...</h3>
   if (isError)
     return (
