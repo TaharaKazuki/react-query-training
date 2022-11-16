@@ -11,7 +11,6 @@ type Props = {
 }
 
 const fetchComments = async (postId: number) => {
-  console.info('postId', postId)
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
   ).then((res) => res.json())
@@ -33,8 +32,9 @@ const updatePost = async (postId: number) => {
 }
 
 export const PostDetail: FC<Props> = ({ post }) => {
-  const { data, isLoading, isError, error } = useQuery<Comment[], Error>('comments', () =>
-    fetchComments(post.id)
+  const { data, isLoading, isError, error } = useQuery<Comment[], Error>(
+    ['comments', post.id],
+    () => fetchComments(post.id)
   )
 
   if (isLoading) {
