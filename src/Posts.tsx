@@ -32,7 +32,7 @@ export const Posts = () => {
     }
   }, [currentPage, queryClient])
 
-  const { data, isError, error, isLoading, isFetching } = useQuery<Post[], Error>(
+  const { data, isError, error, isLoading } = useQuery<Post[], Error>(
     ['post', currentPage],
     () => fetchPosts(currentPage),
     {
